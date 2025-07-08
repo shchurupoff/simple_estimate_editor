@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "../lib/store";
 import EstimateTable from "../components/EstimateTable";
@@ -9,8 +9,10 @@ import { loadEstimate } from "../lib/estimateSlice";
 import Notification from "../components/Notification";
 import styled from "styled-components";
 import ExportButton from "@/components/ExportButton";
+import Loader from "@/components/Loader";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
   const Container = styled.div`
     max-width: 1200px;
     margin: 0 auto;
@@ -33,6 +35,7 @@ export default function Home() {
     const savedEstimate = localStorage.getItem("estimate");
     if (savedEstimate) {
       store.dispatch(loadEstimate(JSON.parse(savedEstimate)));
+      setIsLoading(false);
     }
   }, []);
 
@@ -41,10 +44,16 @@ export default function Home() {
       <Container>
         <Title>Редактор сметы</Title>
         <AddItemForm />
-        <EstimateTable />
-        <ExportContainer>
-          <ExportButton />
-        </ExportContainer>
+        {!isLoading ? (
+          <>
+            <EstimateTable />
+            <ExportContainer>
+              <ExportButton />
+            </ExportContainer>
+          </>
+        ) : (
+          <Loader />
+        )}
         <Notification />
       </Container>
     </Provider>
