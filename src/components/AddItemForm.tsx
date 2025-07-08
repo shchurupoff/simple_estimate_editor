@@ -38,7 +38,7 @@ export default function AddItemForm() {
         <Controller
           name="name"
           control={control}
-          render={({ field }) => <Input {...field} />}
+          render={({ field }) => <Input placeholder="Позиция" {...field} />}
         />
       </Form.Item>
 
